@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Game;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.service.GroupService;
 import com.example.demo.service.UserService;
@@ -17,9 +18,14 @@ public class GroupController {
     @Autowired
     private GroupService groupService;
 
-    @GetMapping("/getListGamesById/{id}")
+    @GetMapping("/getListGamesByGroupId/{id}")
     public ResponseEntity<?> getListGamesByGroupId(@PathVariable("id") int id){
         List<Game> games = groupService.getListGamesByGroupId(id);
+
+        if(games == null){
+            throw new NotFoundException("Khong tim thay games cua group: " + id);
+        }
+
         List<String> gameNames = new ArrayList<>();
         for(Game game: games){
             gameNames.add(game.getName());
